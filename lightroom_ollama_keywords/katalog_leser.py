@@ -20,6 +20,8 @@ JOIN AgLibraryFolder AS folder
     ON file.folder = folder.id_local
 JOIN AgLibraryRootFolder AS root_folder
     ON folder.rootFolder = root_folder.id_local
+WHERE
+    LOWER(file.extension) NOT IN ('mp4', 'mov', 'avi', 'mkv', 'wmv', 'flv', 'webm', 'm4v', 'mpg', 'mpeg', '3gp', 'psd')
 """
 
 

@@ -38,12 +38,12 @@ classification:
   categories:
     Landschaft:
       prompt: >
-        Fokussiere besonders auf: Wetter, Tageszeit, Lichtstimmung, Vegetation,
+        Fokussiere besonders auf: Wetter, Vegetation,
         Gelände, Jahreszeit, Horizont, Personen, Situationen.
     Porträt:
       prompt: >
-        Fokussiere besonders auf: Bildkomposition, Personen, Anzahl,
-        Gesichtsausdrücke, Kleidung, Pose, Hintergrund, Beleuchtung.
+        Fokussiere besonders auf: Bildkomposition, Personen, 
+        Kleidung, Pose, Hintergrund.
     Stadt:
       prompt: >
         Fokussiere besonders auf: Gebäudetyp, Architekturstil, berühmte

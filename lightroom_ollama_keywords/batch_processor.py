@@ -66,11 +66,27 @@ class BatchProcessor:
         fehler_details: list[str] = []
         kategorie_zaehler: Counter[str] = Counter()
 
+        from datetime import datetime, timedelta
+
         start = time.monotonic()
+        start_zeit = datetime.now()
+        print(f"Gestartet: {start_zeit.strftime('%H:%M:%S')}")
 
         for index, foto in enumerate(fotos, start=1):
             verbleibend = gesamt - index
-            print(f"[{index}/{gesamt}] Verarbeite: {foto.file_path}  (verbleibend: {verbleibend})")
+
+            # Zeitschätzung berechnen
+            vergangen = time.monotonic() - start
+            if index > 1:
+                durchschnitt_pro_foto = vergangen / (index - 1)
+                rest_sekunden = durchschnitt_pro_foto * verbleibend
+                rest_td = timedelta(seconds=int(rest_sekunden))
+                fertig_um = datetime.now() + timedelta(seconds=rest_sekunden)
+                zeit_info = f"~{rest_td} verbleibend, fertig ~{fertig_um.strftime('%H:%M')}"
+            else:
+                zeit_info = "berechne..."
+
+            print(f"[{index}/{gesamt}] Verarbeite: {foto.file_path}  (noch {verbleibend}, {zeit_info})")
             logger.info("Verarbeite Foto %d/%d: %s", index, gesamt, foto.file_path)
 
             try:
@@ -107,14 +123,26 @@ class BatchProcessor:
                 detail = f"{foto.file_path}: {exc}"
                 fehler_details.append(detail)
                 logger.error("Fehler bei %s: %s", foto.file_path, exc)
+                self._tracker.fehler_speichern(
+                    foto.file_path, self._model_name, str(exc)
+                )
 
         dauer = time.monotonic() - start
+        ende_zeit = datetime.now()
 
         # Zusammenfassung ausgeben
+        stunden = dauer / 3600
         print(f"\n--- Zusammenfassung ---")
+        print(f"Gestartet: {start_zeit.strftime('%H:%M:%S')}")
+        print(f"Beendet:   {ende_zeit.strftime('%H:%M:%S')}")
+        if dauer >= 3600:
+            print(f"Dauer: {dauer:.1f}s ({stunden:.1f}h)")
+        elif dauer >= 60:
+            print(f"Dauer: {dauer:.1f}s ({dauer / 60:.1f}min)")
+        else:
+            print(f"Dauer: {dauer:.1f}s")
         print(f"Verarbeitet: {verarbeitet}")
         print(f"Fehler: {fehler}")
-        print(f"Dauer: {dauer:.1f}s")
 
         if kategorie_zaehler:
             print("Fotos pro Kategorie:")

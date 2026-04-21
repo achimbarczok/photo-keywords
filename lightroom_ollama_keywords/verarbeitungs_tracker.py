@@ -32,7 +32,7 @@ class VerarbeitungsTracker:
             ) from exc
 
     def _create_schema(self) -> None:
-        """Erstellt die Tabelle und den Index, falls sie noch nicht existieren."""
+        """Erstellt die Tabellen und Indizes, falls sie noch nicht existieren."""
         self._conn.executescript(
             """
             CREATE TABLE IF NOT EXISTS verarbeitungen (
@@ -45,6 +45,16 @@ class VerarbeitungsTracker:
             );
             CREATE INDEX IF NOT EXISTS idx_file_model
                 ON verarbeitungen(file_path, model_name);
+            CREATE TABLE IF NOT EXISTS fehler (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                file_path TEXT NOT NULL,
+                model_name TEXT NOT NULL,
+                fehler_text TEXT NOT NULL,
+                timestamp TEXT NOT NULL,
+                UNIQUE(file_path, model_name)
+            );
+            CREATE INDEX IF NOT EXISTS idx_fehler_file_model
+                ON fehler(file_path, model_name);
             """
         )
 
@@ -59,9 +69,14 @@ class VerarbeitungsTracker:
     def unverarbeitete_filtern(
         self, fotos: list[FotoEintrag], model_name: str
     ) -> list[FotoEintrag]:
-        """Filtert eine Liste von Fotos und gibt nur unverarbeitete zurück."""
+        """Filtert eine Liste von Fotos und gibt nur unverarbeitete zurück.
+
+        Überspringt sowohl erfolgreich verarbeitete als auch fehlgeschlagene Fotos.
+        """
         return [
-            foto for foto in fotos if not self.ist_verarbeitet(foto.file_path, model_name)
+            foto for foto in fotos
+            if not self.ist_verarbeitet(foto.file_path, model_name)
+            and not self.hat_fehler(foto.file_path, model_name)
         ]
 
     def verarbeitung_speichern(
@@ -82,3 +97,39 @@ class VerarbeitungsTracker:
     def close(self) -> None:
         """Schließt die Datenbankverbindung."""
         self._conn.close()
+
+    # ------------------------------------------------------------------
+    # Fehler-Tracking
+    # ------------------------------------------------------------------
+
+    def hat_fehler(self, file_path: str, model_name: str) -> bool:
+        """Prüft, ob ein Foto bereits mit einem Fehler markiert ist."""
+        cursor = self._conn.execute(
+            "SELECT 1 FROM fehler WHERE file_path = ? AND model_name = ?",
+            (file_path, model_name),
+        )
+        return cursor.fetchone() is not None
+
+    def fehler_speichern(
+        self, file_path: str, model_name: str, fehler_text: str
+    ) -> None:
+        """Speichert einen Fehler-Eintrag für ein Foto."""
+        timestamp = datetime.now(timezone.utc).isoformat()
+        self._conn.execute(
+            """
+            INSERT OR REPLACE INTO fehler
+                (file_path, model_name, fehler_text, timestamp)
+            VALUES (?, ?, ?, ?)
+            """,
+            (file_path, model_name, fehler_text, timestamp),
+        )
+        self._conn.commit()
+
+    def fehler_zuruecksetzen(self, model_name: str) -> int:
+        """Löscht alle Fehler-Einträge für ein Modell. Gibt Anzahl gelöschter Einträge zurück."""
+        cursor = self._conn.execute(
+            "DELETE FROM fehler WHERE model_name = ?",
+            (model_name,),
+        )
+        self._conn.commit()
+        return cursor.rowcount

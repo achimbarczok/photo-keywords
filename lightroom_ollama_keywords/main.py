@@ -37,6 +37,12 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         default=None,
         help="Verzeichnis mit Testbildern für den Benchmark-Modus.",
     )
+    parser.add_argument(
+        "--retry-errors",
+        action="store_true",
+        default=False,
+        help="Zuvor fehlgeschlagene Fotos erneut verarbeiten.",
+    )
     return parser.parse_args(argv)
 
 
@@ -62,7 +68,7 @@ def _setup_logging(log_file_path: str) -> None:
     root_logger.addHandler(console_handler)
 
 
-def _run_normal(config_path: str) -> None:
+def _run_normal(config_path: str, retry_errors: bool = False) -> None:
     """Normaler Modus: Fotos aus Katalog lesen, analysieren, Stichwörter schreiben."""
     loader = ConfigLoader()
     config = loader.load(config_path)
@@ -85,6 +91,13 @@ def _run_normal(config_path: str) -> None:
 
         # Tracker öffnen und filtern
         tracker = VerarbeitungsTracker(config.tracking_db_path)
+
+        if retry_errors:
+            anzahl = tracker.fehler_zuruecksetzen(config.model_name)
+            if anzahl > 0:
+                print(f"Fehler zurückgesetzt: {anzahl} Fotos werden erneut verarbeitet.")
+                logger.info("Fehler zurückgesetzt: %d Einträge für Modell %s", anzahl, config.model_name)
+
         unverarbeitet = tracker.unverarbeitete_filtern(fotos, config.model_name)
         logger.info("Unverarbeitete Fotos: %d", len(unverarbeitet))
 
@@ -188,7 +201,7 @@ def main(argv: list[str] | None = None) -> None:
         if args.benchmark:
             _run_benchmark(args.config, args.benchmark)
         else:
-            _run_normal(args.config)
+            _run_normal(args.config, retry_errors=args.retry_errors)
     except KeywordGeneratorError as exc:
         print(f"Fehler: {exc}", file=sys.stderr)
         logger.error("Fataler Fehler: %s", exc)
