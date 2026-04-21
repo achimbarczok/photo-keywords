@@ -28,6 +28,8 @@ htmlcov/
 # Logs & tracking
 *.log
 tracking.db
+tracking.db-shm
+tracking.db-wal
 
 # User config (enthält lokale Pfade)
 config.yaml
