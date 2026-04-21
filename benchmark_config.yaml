@@ -2,129 +2,81 @@
 # Nur für den Benchmark-Modus — catalog_path wird nicht verwendet.
 
 catalog_path: "unused"
-model_name: "llava:7b"
-
+model_name: "gemma4:e4b"
 ollama_endpoint: "http://localhost:11434"
 
 prompt_template: >
-  Du bist ein professioneller Foto-Analyst mit Expertise in Objekterkennung und
-  computergestützter Bildbeschreibung. Du versuchst auch, berühmte Gebäude zu
-  identifizieren. Darüber hinaus bestimmst du Tier- und Pflanzenarten so genau
-  wie möglich. Du beschreibst Objekte so spezifisch wie du kannst.
-  Analysiere dieses Foto und liefere beschreibende deutsche Stichwörter für die
-  Foto-Katalogisierung. Antworte NUR mit einer kommaseparierten Liste von
-  deutschen Stichwörtern. Keine Erklärungen.
+  Du bist ein professioneller Foto-Analyst. Analysiere dieses Foto und liefere
+  beschreibende deutsche Stichwörter für die Foto-Katalogisierung.
+  Antworte NUR mit einer kommaseparierten Liste. Keine Erklärungen.
 
 benchmark_models:
   - "gemma4:e4b"
-#  - "qwen3.5:4b"
-
 
 benchmark_output_csv: "./benchmark_results/benchmark_results.csv"
-
 log_file_path: "./benchmark.log"
 tracking_db_path: "./tracking.db"
 
-# Standort-Funktionalität — GPS-Koordinaten aus EXIF/Katalog lesen,
-# per Reverse-Geocoding in Ortsnamen auflösen und als Stichwörter hinzufügen.
-# Benötigt: pip install reverse_geocoder
 location:
   enabled: true
 
-# Klassifikation und Routing — Zwei-Stufen-Prozess
-# Wenn dieser Abschnitt vorhanden ist, wird jedes Foto zuerst klassifiziert
-# und dann mit einem spezialisierten Prompt analysiert.
-# Ohne diesen Abschnitt wird der bisherige Einzelprompt-Modus verwendet.
-
-# Klassifikation und Routing
 classification:
   model: "gemma4:e4b"
   prompt: >
     Classify this photo into exactly ONE of these categories.
     Reply with ONLY the category name, nothing else. No explanation.
-    Categories: Landscape, Portrait, Architecture, Document, Food, Animals, Garden, Museum, Event, Other
+    Categories: Landscape, Portrait, Urban, Interior, Document, Food, Animals, Garden, Museum, Event, Other
+
+  # Basis-Prompt: wird allen Kategorie-Prompts vorangestellt
+  base_prompt: >
+    Du bist ein professioneller Foto-Analyst mit Expertise in Objekterkennung
+    und computergestützter Bildbeschreibung. Analysiere dieses Foto und liefere
+    beschreibende deutsche Stichwörter für die Foto-Katalogisierung.
+    Du beschreibst Orte, Objekte und Situationen so spezifisch wie du kannst.
+    Antworte NUR mit einer kommaseparierten Liste. Keine Erklärungen.
+
   categories:
     Landschaft:
       prompt: >
-        Du bist ein professioneller Foto-Analyst mit Expertise in Objekterkennung 
-        und computergestützter Bildbeschreibung. Analysiere dieses Foto und
-        liefere beschreibende deutsche Stichwörter für die Foto-Katalogisierung. 
-        Du beschreibst Objekte so spezifisch wie du kannst.
-        Antworte NUR mit einer kommaseparierten Liste. Keine Erklärungen.
+        Fokussiere besonders auf: Wetter, Tageszeit, Lichtstimmung, Vegetation,
+        Gelände, Jahreszeit, Horizont, Personen, Situationen.
     Porträt:
       prompt: >
-        Du bist ein professioneller Foto-Analyst mit Expertise in Objekterkennung 
-        und computergestützter Bildbeschreibung. Analysiere dieses Foto und
-        liefere beschreibende deutsche Stichwörter für die Foto-Katalogisierung. 
-        Du beschreibst Objekte so spezifisch wie du kannst.
-        Antworte NUR mit einer kommaseparierten Liste. Keine Erklärungen.
-    Architektur:
+        Fokussiere besonders auf: Bildkomposition, Personen, Anzahl,
+        Gesichtsausdrücke, Kleidung, Pose, Hintergrund, Beleuchtung.
+    Stadt:
       prompt: >
-        Du bist ein professioneller Foto-Analyst mit Expertise in Objekterkennung 
-        und computergestützter Bildbeschreibung. Analysiere dieses Foto und
-        liefere beschreibende deutsche Stichwörter für die Foto-Katalogisierung. 
-        Du beschreibst Objekte so spezifisch wie du kannst.
         Fokussiere besonders auf: Gebäudetyp, Architekturstil, berühmte
-        Wahrzeichen, Material, Personen.
-        Antworte NUR mit einer kommaseparierten Liste. Keine Erklärungen.
+        Wahrzeichen, Straßenszene, Skyline, urbanes Leben, Verkehr.
+    Innenraum:
+      prompt: >
+        Fokussiere besonders auf: Raumtyp, Einrichtung, Möbel, Beleuchtung,
+        Atmosphäre, Dekoration, Personen, Nutzung des Raums.
     Dokument:
       prompt: >
-        Du bist ein professioneller Foto-Analyst mit Expertise in Objekterkennung 
-        und computergestützter Bildbeschreibung. Analysiere dieses Foto und
-        liefere beschreibende deutsche Stichwörter für die Foto-Katalogisierung. 
-        Du beschreibst Objekte so spezifisch wie du kannst.
-        Fokussiere besonders auf: Wörter, Dokumenttyp, Textinhalte, Sprache, Format.
-        Antworte NUR mit einer kommaseparierten Liste. Keine Erklärungen.
+        Fokussiere besonders auf: Dokumenttyp, Textinhalte, Sprache, Format,
+        Zustand, historischer Kontext.
     Essen:
       prompt: >
-        Du bist ein professioneller Foto-Analyst mit Expertise in Objekterkennung 
-        und computergestützter Bildbeschreibung. Analysiere dieses Foto und
-        liefere beschreibende deutsche Stichwörter für die Foto-Katalogisierung. 
-        Du beschreibst Objekte so spezifisch wie du kannst.
         Fokussiere besonders auf: Gericht, Zutaten, Küche, Präsentation,
         Anlass, Getränke, Umgebung.
-        Antworte NUR mit einer kommaseparierten Liste. Keine Erklärungen.
     Tiere:
       prompt: >
-        Du bist ein professioneller Foto-Analyst mit Expertise in Objekterkennung 
-        und computergestützter Bildbeschreibung. Analysiere dieses Foto und
-        liefere beschreibende deutsche Stichwörter für die Foto-Katalogisierung. 
-        Du beschreibst Objekte so spezifisch wie du kannst.
-        Fokussiere besonders auf: Tierart, Lebensraum, Umgebung.
-        Antworte NUR mit einer kommaseparierten Liste. Keine Erklärungen.
+        Fokussiere besonders auf: Tierart, Lebensraum, Verhalten, Anzahl,
+        Umgebung. Auch Fossilien und Tierpräparate zählen dazu.
     Garten:
       prompt: >
-        Du bist ein professioneller Foto-Analyst mit Expertise in Objekterkennung 
-        und computergestützter Bildbeschreibung. Analysiere dieses Foto und
-        liefere beschreibende deutsche Stichwörter für die Foto-Katalogisierung. 
-        Du beschreibst Objekte so spezifisch wie du kannst.
         Fokussiere besonders auf: Pflanzenarten, Blüten, Gartengestaltung,
         Jahreszeit, Gartenelemente, Farben.
-        Antworte NUR mit einer kommaseparierten Liste. Keine Erklärungen.
     Museum:
       prompt: >
-        Du bist ein professioneller Foto-Analyst mit Expertise in Objekterkennung 
-        und computergestützter Bildbeschreibung. Analysiere dieses Foto und
-        liefere beschreibende deutsche Stichwörter für die Foto-Katalogisierung. 
-        Du beschreibst Objekte so spezifisch wie du kannst.
-        Fokussiere besonders auf: Ausstellungsstück, Epoche, Material, Museum,
+        Fokussiere besonders auf: Ausstellungsstück, Epoche, Material,
         Exponat, Fossilien, Kunstwerk, historischer Kontext.
-        Antworte NUR mit einer kommaseparierten Liste. Keine Erklärungen.
     Veranstaltung:
       prompt: >
-        Du bist ein professioneller Foto-Analyst mit Expertise in Objekterkennung 
-        und computergestützter Bildbeschreibung. Analysiere dieses Foto und
-        liefere beschreibende deutsche Stichwörter für die Foto-Katalogisierung. 
-        Du beschreibst Objekte so spezifisch wie du kannst.
         Fokussiere besonders auf: Art der Veranstaltung, Anlass, Personen,
         Dekoration, Ort, Bühne, Publikum.
-        Antworte NUR mit einer kommaseparierten Liste. Keine Erklärungen.
     Sonstiges:
       prompt: >
-        Du bist ein professioneller Foto-Analyst mit Expertise in Objekterkennung und
-        computergestützter Bildbeschreibung. Du versuchst auch, berühmte Gebäude zu
-        identifizieren. Darüber hinaus bestimmst du Tier- und Pflanzenarten so genau
-        wie möglich. Du beschreibst Objekte so spezifisch wie du kannst.
-        Analysiere dieses Foto und liefere beschreibende deutsche Stichwörter für die
-        Foto-Katalogisierung. Antworte NUR mit einer kommaseparierten Liste von
-        deutschen Stichwörtern. Keine Erklärungen.
+        Beschreibe alles was du siehst: Objekte, Materialien, Farben,
+        Zustand, Kontext, Verwendungszweck.

@@ -93,6 +93,7 @@ class ConfigLoader:
 
         modell = classification_data.get("model", "")
         prompt = classification_data.get("prompt", "")
+        basis_prompt = classification_data.get("base_prompt", "")
         categories_data = classification_data.get("categories", {})
 
         kategorien: dict[FotoKategorie, KategorieConfig] = {}
@@ -117,6 +118,7 @@ class ConfigLoader:
             modell=modell,
             prompt=prompt,
             kategorien=kategorien,
+            basis_prompt=basis_prompt,
         )
 
     def _parse_validation(

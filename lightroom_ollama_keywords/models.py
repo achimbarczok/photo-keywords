@@ -138,7 +138,8 @@ class FotoKategorie(str, Enum):
 
     LANDSCHAFT = "Landschaft"
     PORTRAET = "Porträt"
-    ARCHITEKTUR = "Architektur"
+    STADT = "Stadt"
+    INNENRAUM = "Innenraum"
     DOKUMENT = "Dokument"
     ESSEN = "Essen"
     TIERE = "Tiere"
@@ -163,6 +164,7 @@ class KlassifikationsConfig:
     modell: str
     prompt: str
     kategorien: dict[FotoKategorie, KategorieConfig] = field(default_factory=dict)
+    basis_prompt: str = ""
 
 
 @dataclass

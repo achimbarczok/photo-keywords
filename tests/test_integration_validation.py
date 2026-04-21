@@ -220,7 +220,7 @@ class TestKlassifikationsRouterTransparentValidation:
             modell="llava:7b",
             prompt=(
                 "Klassifiziere dieses Foto. "
-                "Kategorien: Landschaft, Porträt, Architektur, Dokument, "
+                "Kategorien: Landschaft, Porträt, Stadt, Innenraum, Dokument, "
                 "Essen, Tiere, Garten, Sonstiges"
             ),
             kategorien={

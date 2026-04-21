@@ -30,7 +30,16 @@ _KATEGORIE_LOOKUP: dict[str, FotoKategorie] = {
 _KATEGORIE_LOOKUP.update({
     "landscape": FotoKategorie.LANDSCHAFT,
     "portrait": FotoKategorie.PORTRAET,
-    "architecture": FotoKategorie.ARCHITEKTUR,
+    "urban": FotoKategorie.STADT,
+    "city": FotoKategorie.STADT,
+    "architecture": FotoKategorie.STADT,
+    "street": FotoKategorie.STADT,
+    "building": FotoKategorie.STADT,
+    "buildings": FotoKategorie.STADT,
+    "skyline": FotoKategorie.STADT,
+    "interior": FotoKategorie.INNENRAUM,
+    "indoor": FotoKategorie.INNENRAUM,
+    "room": FotoKategorie.INNENRAUM,
     "document": FotoKategorie.DOKUMENT,
     "food": FotoKategorie.ESSEN,
     "animals": FotoKategorie.TIERE,
@@ -41,8 +50,6 @@ _KATEGORIE_LOOKUP.update({
     "miscellaneous": FotoKategorie.SONSTIGES,
     "wildlife": FotoKategorie.TIERE,
     "nature": FotoKategorie.LANDSCHAFT,
-    "building": FotoKategorie.ARCHITEKTUR,
-    "buildings": FotoKategorie.ARCHITEKTUR,
     "people": FotoKategorie.PORTRAET,
     "person": FotoKategorie.PORTRAET,
     "text": FotoKategorie.DOKUMENT,
@@ -219,13 +226,21 @@ class KlassifikationsRouter:
     def _prompt_und_modell_fuer(
         self, kategorie: FotoKategorie
     ) -> tuple[str, str]:
-        """Gibt den passenden Prompt und das Modell für eine Kategorie zurück."""
+        """Gibt den passenden Prompt und das Modell für eine Kategorie zurück.
+
+        Wenn ein basis_prompt konfiguriert ist, wird er mit dem Kategorie-Prompt
+        zusammengesetzt: basis_prompt + "\n" + kategorie_prompt.
+        """
         kat_config = self._config.kategorien.get(kategorie)
 
         if kat_config is None:
             # Keine Konfiguration für diese Kategorie → Fallback
             return self._fallback_prompt, self._standard_modell
 
-        prompt = kat_config.prompt
+        kategorie_prompt = kat_config.prompt
+        if self._config.basis_prompt:
+            prompt = self._config.basis_prompt.rstrip() + "\n" + kategorie_prompt
+        else:
+            prompt = kategorie_prompt
         modell = kat_config.modell if kat_config.modell else self._standard_modell
         return prompt, modell
