@@ -86,7 +86,8 @@ class BatchProcessor:
             else:
                 zeit_info = "berechne..."
 
-            print(f"[{index}/{gesamt}] Verarbeite: {foto.file_path}  (noch {verbleibend}, {zeit_info})")
+            print(f"[{index}/{gesamt}] Verarbeite: {foto.file_path}")
+            print(f"  noch {verbleibend}, {zeit_info}")
             logger.info("Verarbeite Foto %d/%d: %s", index, gesamt, foto.file_path)
 
             try:
