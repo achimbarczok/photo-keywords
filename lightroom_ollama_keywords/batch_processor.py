@@ -94,6 +94,11 @@ class BatchProcessor:
                 # GPS ermitteln und Standort auflösen
                 standort_daten = self._standort_ermitteln(foto)
 
+                if standort_daten is not None:
+                    print(f"  Standort: {standort_daten.stadt}, {standort_daten.land}")
+                elif self._gps_leser is not None:
+                    print(f"  Standort: kein GPS")
+
                 if self._klassifikations_router is not None:
                     ergebnis = self._klassifikations_router.bild_analysieren(
                         foto.file_path, standort_daten
