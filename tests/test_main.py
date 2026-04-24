@@ -6,8 +6,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from lightroom_ollama_keywords.main import main, _parse_args
-from lightroom_ollama_keywords.models import Config, BatchErgebnis
+from photo_keywords.main import main, _parse_args
+from photo_keywords.models import Config, BatchErgebnis
 
 
 def _make_config(**overrides) -> Config:
@@ -37,11 +37,35 @@ class TestParseArgs:
         args = _parse_args(["--config", "config.yaml"])
         assert args.config == "config.yaml"
         assert args.benchmark is None
+        assert args.command == "keywords"
 
     def test_config_and_benchmark(self):
         args = _parse_args(["--config", "config.yaml", "--benchmark", "/imgs"])
         assert args.config == "config.yaml"
         assert args.benchmark == "/imgs"
+        assert args.command == "keywords"
+
+    def test_explicit_keywords_subcommand(self):
+        args = _parse_args(["keywords", "--config", "config.yaml"])
+        assert args.config == "config.yaml"
+        assert args.command == "keywords"
+
+    def test_gps_report_subcommand(self):
+        args = _parse_args(["gps-report", "--config", "config.yaml"])
+        assert args.config == "config.yaml"
+        assert args.command == "gps-report"
+        assert args.day is None
+        assert args.month is None
+
+    def test_gps_report_with_day(self):
+        args = _parse_args(["gps-report", "--config", "config.yaml", "--day", "2024-08-26"])
+        assert args.day == "2024-08-26"
+        assert args.command == "gps-report"
+
+    def test_gps_report_with_month(self):
+        args = _parse_args(["gps-report", "--config", "config.yaml", "--month", "2024-08"])
+        assert args.month == "2024-08"
+        assert args.command == "gps-report"
 
     def test_missing_config_exits(self):
         with pytest.raises(SystemExit):
@@ -55,12 +79,12 @@ class TestParseArgs:
 class TestLogFilePathPrinted:
     """Validates: Requirement 8.4 — Log file path is printed to console."""
 
-    @patch("lightroom_ollama_keywords.main.StichwortSchreiber")
-    @patch("lightroom_ollama_keywords.main.OllamaClient")
-    @patch("lightroom_ollama_keywords.main.BatchProcessor")
-    @patch("lightroom_ollama_keywords.main.VerarbeitungsTracker")
-    @patch("lightroom_ollama_keywords.main.KatalogLeser")
-    @patch("lightroom_ollama_keywords.main.ConfigLoader")
+    @patch("photo_keywords.main.StichwortSchreiber")
+    @patch("photo_keywords.main.OllamaClient")
+    @patch("photo_keywords.main.BatchProcessor")
+    @patch("photo_keywords.main.VerarbeitungsTracker")
+    @patch("photo_keywords.main.KatalogLeser")
+    @patch("photo_keywords.main.ConfigLoader")
     def test_normal_mode_prints_log_path(
         self,
         mock_config_loader_cls,
@@ -84,8 +108,8 @@ class TestLogFilePathPrinted:
         captured = capsys.readouterr()
         assert f"Logdatei: {log_path}" in captured.out
 
-    @patch("lightroom_ollama_keywords.main.BenchmarkRunner")
-    @patch("lightroom_ollama_keywords.main.ConfigLoader")
+    @patch("photo_keywords.main.BenchmarkRunner")
+    @patch("photo_keywords.main.ConfigLoader")
     def test_benchmark_mode_prints_log_path(
         self,
         mock_config_loader_cls,
@@ -110,11 +134,11 @@ class TestLogFilePathPrinted:
 # ------------------------------------------------------------------
 
 class TestFatalErrorHandling:
-    @patch("lightroom_ollama_keywords.main.ConfigLoader")
+    @patch("photo_keywords.main.ConfigLoader")
     def test_config_error_exits_with_message(
         self, mock_config_loader_cls, capsys
     ):
-        from lightroom_ollama_keywords.errors import ConfigError
+        from photo_keywords.errors import ConfigError
 
         mock_config_loader_cls.return_value.load.side_effect = ConfigError(
             "Pflichtparameter fehlt: catalog_path"
@@ -133,11 +157,11 @@ class TestFatalErrorHandling:
 # ------------------------------------------------------------------
 
 class TestResourceCleanup:
-    @patch("lightroom_ollama_keywords.main.StichwortSchreiber")
-    @patch("lightroom_ollama_keywords.main.OllamaClient")
-    @patch("lightroom_ollama_keywords.main.VerarbeitungsTracker")
-    @patch("lightroom_ollama_keywords.main.KatalogLeser")
-    @patch("lightroom_ollama_keywords.main.ConfigLoader")
+    @patch("photo_keywords.main.StichwortSchreiber")
+    @patch("photo_keywords.main.OllamaClient")
+    @patch("photo_keywords.main.VerarbeitungsTracker")
+    @patch("photo_keywords.main.KatalogLeser")
+    @patch("photo_keywords.main.ConfigLoader")
     def test_resources_closed_on_error(
         self,
         mock_config_loader_cls,

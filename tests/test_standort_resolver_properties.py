@@ -8,7 +8,7 @@ from unittest.mock import MagicMock
 from hypothesis import assume, given, settings
 from hypothesis import strategies as st
 
-from lightroom_ollama_keywords.standort_resolver import StandortResolver
+from photo_keywords.standort_resolver import StandortResolver
 
 
 # ---------------------------------------------------------------------------

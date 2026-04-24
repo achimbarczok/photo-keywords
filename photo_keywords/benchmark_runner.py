@@ -8,17 +8,17 @@ import os
 import time
 from datetime import datetime
 
-from lightroom_ollama_keywords.errors import BenchmarkError
-from lightroom_ollama_keywords.gps_leser import GpsLeser
-from lightroom_ollama_keywords.klassifikations_router import KlassifikationsRouter
-from lightroom_ollama_keywords.models import (
+from photo_keywords.errors import BenchmarkError
+from photo_keywords.gps_leser import GpsLeser
+from photo_keywords.klassifikations_router import KlassifikationsRouter
+from photo_keywords.models import (
     BenchmarkErgebnis,
     BenchmarkZusammenfassung,
     Config,
     StandortDaten,
 )
-from lightroom_ollama_keywords.ollama_client import OllamaClient
-from lightroom_ollama_keywords.standort_resolver import StandortResolver
+from photo_keywords.ollama_client import OllamaClient
+from photo_keywords.standort_resolver import StandortResolver
 
 logger = logging.getLogger(__name__)
 

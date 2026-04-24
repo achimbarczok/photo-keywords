@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from lightroom_ollama_keywords.antwort_validator import AntwortValidator
-from lightroom_ollama_keywords.models import ValidierungsConfig, ValidierungsErgebnis
+from photo_keywords.antwort_validator import AntwortValidator
+from photo_keywords.models import ValidierungsConfig, ValidierungsErgebnis
 
 
 class TestLeereListeUngueltig:

@@ -10,9 +10,9 @@ import yaml
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from lightroom_ollama_keywords.config_loader import ConfigLoader
-from lightroom_ollama_keywords.errors import ConfigError
-from lightroom_ollama_keywords.models import Config
+from photo_keywords.config_loader import ConfigLoader
+from photo_keywords.errors import ConfigError
+from photo_keywords.models import Config
 
 
 # --- Hypothesis strategies for valid Config fields ---
@@ -227,7 +227,7 @@ class TestConfigLoaderClassification:
         config = loader.load(str(config_file))
 
         assert config.klassifikation is not None
-        from lightroom_ollama_keywords.models import FotoKategorie
+        from photo_keywords.models import FotoKategorie
 
         dokument_config = config.klassifikation.kategorien[FotoKategorie.DOKUMENT]
         assert dokument_config.modell == "glm-ocr"

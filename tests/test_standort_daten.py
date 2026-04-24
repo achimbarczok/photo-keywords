@@ -6,7 +6,7 @@ import dataclasses
 
 import pytest
 
-from lightroom_ollama_keywords.models import StandortDaten
+from photo_keywords.models import StandortDaten
 
 
 class TestStandortDatenFrozen:

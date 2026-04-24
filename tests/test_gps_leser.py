@@ -9,7 +9,7 @@ from unittest.mock import MagicMock, mock_open, patch
 import pytest
 from exifread.utils import Ratio
 
-from lightroom_ollama_keywords.gps_leser import GpsLeser
+from photo_keywords.gps_leser import GpsLeser
 
 
 # ---------------------------------------------------------------------------
@@ -115,7 +115,7 @@ class TestGpsAusExif:
         dummy = tmp_path / "test.jpg"
         dummy.write_bytes(b"fake")
 
-        with patch("lightroom_ollama_keywords.gps_leser.exifread.process_file", return_value=tags):
+        with patch("photo_keywords.gps_leser.exifread.process_file", return_value=tags):
             result = leser.gps_aus_exif(str(dummy))
 
         assert result is not None
@@ -130,7 +130,7 @@ class TestGpsAusExif:
         dummy = tmp_path / "no_gps.jpg"
         dummy.write_bytes(b"fake")
 
-        with patch("lightroom_ollama_keywords.gps_leser.exifread.process_file", return_value={}):
+        with patch("photo_keywords.gps_leser.exifread.process_file", return_value={}):
             result = leser.gps_aus_exif(str(dummy))
 
         assert result is None
@@ -142,7 +142,7 @@ class TestGpsAusExif:
         dummy = tmp_path / "partial.jpg"
         dummy.write_bytes(b"fake")
 
-        with patch("lightroom_ollama_keywords.gps_leser.exifread.process_file", return_value=tags):
+        with patch("photo_keywords.gps_leser.exifread.process_file", return_value=tags):
             result = leser.gps_aus_exif(str(dummy))
 
         assert result is None
@@ -169,7 +169,7 @@ class TestGpsAusExif:
         dummy = tmp_path / "invalid.jpg"
         dummy.write_bytes(b"fake")
 
-        with patch("lightroom_ollama_keywords.gps_leser.exifread.process_file", return_value=tags):
+        with patch("photo_keywords.gps_leser.exifread.process_file", return_value=tags):
             with caplog.at_level(logging.WARNING):
                 result = leser.gps_aus_exif(str(dummy))
 
@@ -199,7 +199,7 @@ class TestGpsAusExif:
         dummy = tmp_path / "sw.jpg"
         dummy.write_bytes(b"fake")
 
-        with patch("lightroom_ollama_keywords.gps_leser.exifread.process_file", return_value=tags):
+        with patch("photo_keywords.gps_leser.exifread.process_file", return_value=tags):
             result = leser.gps_aus_exif(str(dummy))
 
         assert result is not None
@@ -314,7 +314,7 @@ class TestGpsErmitteln:
         dummy = tmp_path / "test.jpg"
         dummy.write_bytes(b"fake")
 
-        with patch("lightroom_ollama_keywords.gps_leser.exifread.process_file", return_value=tags):
+        with patch("photo_keywords.gps_leser.exifread.process_file", return_value=tags):
             result = leser.gps_ermitteln(
                 str(dummy), katalog_conn=katalog_db, image_id=1
             )
@@ -338,7 +338,7 @@ class TestGpsErmitteln:
         dummy = tmp_path / "test.jpg"
         dummy.write_bytes(b"fake")
 
-        with patch("lightroom_ollama_keywords.gps_leser.exifread.process_file", return_value=tags):
+        with patch("photo_keywords.gps_leser.exifread.process_file", return_value=tags):
             result = leser.gps_ermitteln(
                 str(dummy), katalog_conn=katalog_db, image_id=999
             )
@@ -361,7 +361,7 @@ class TestGpsErmitteln:
         dummy = tmp_path / "test.jpg"
         dummy.write_bytes(b"fake")
 
-        with patch("lightroom_ollama_keywords.gps_leser.exifread.process_file", return_value=tags):
+        with patch("photo_keywords.gps_leser.exifread.process_file", return_value=tags):
             result = leser.gps_ermitteln(str(dummy))
 
         assert result is not None
@@ -374,7 +374,7 @@ class TestGpsErmitteln:
         dummy = tmp_path / "no_gps.jpg"
         dummy.write_bytes(b"fake")
 
-        with patch("lightroom_ollama_keywords.gps_leser.exifread.process_file", return_value={}):
+        with patch("photo_keywords.gps_leser.exifread.process_file", return_value={}):
             result = leser.gps_ermitteln(
                 str(dummy), katalog_conn=katalog_db, image_id=999
             )

@@ -11,8 +11,8 @@ import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from lightroom_ollama_keywords.benchmark_runner import BenchmarkRunner
-from lightroom_ollama_keywords.models import BenchmarkErgebnis, Config
+from photo_keywords.benchmark_runner import BenchmarkRunner
+from photo_keywords.models import BenchmarkErgebnis, Config
 
 
 # ---------------------------------------------------------------------------

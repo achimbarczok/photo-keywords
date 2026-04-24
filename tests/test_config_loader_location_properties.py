@@ -9,7 +9,7 @@ import yaml
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from lightroom_ollama_keywords.config_loader import ConfigLoader
+from photo_keywords.config_loader import ConfigLoader
 
 
 class TestProperty10ConfigLocationParsing:

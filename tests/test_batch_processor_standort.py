@@ -16,8 +16,8 @@ from unittest.mock import MagicMock, call
 
 import pytest
 
-from lightroom_ollama_keywords.batch_processor import BatchProcessor
-from lightroom_ollama_keywords.models import (
+from photo_keywords.batch_processor import BatchProcessor
+from photo_keywords.models import (
     BatchErgebnis,
     FotoEintrag,
     FotoKategorie,

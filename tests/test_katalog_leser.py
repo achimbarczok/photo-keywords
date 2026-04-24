@@ -8,8 +8,8 @@ import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from lightroom_ollama_keywords.errors import KatalogError
-from lightroom_ollama_keywords.katalog_leser import KatalogLeser
+from photo_keywords.errors import KatalogError
+from photo_keywords.katalog_leser import KatalogLeser
 
 
 # --- Hypothesis strategies for Lightroom catalog data ---

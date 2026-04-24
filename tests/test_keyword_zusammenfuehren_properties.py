@@ -8,8 +8,8 @@ from __future__ import annotations
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from lightroom_ollama_keywords.batch_processor import BatchProcessor
-from lightroom_ollama_keywords.models import StandortDaten
+from photo_keywords.batch_processor import BatchProcessor
+from photo_keywords.models import StandortDaten
 
 
 # ---------------------------------------------------------------------------

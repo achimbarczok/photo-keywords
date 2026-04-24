@@ -5,19 +5,19 @@ from __future__ import annotations
 import logging
 import time
 
-from lightroom_ollama_keywords.errors import (
+from photo_keywords.errors import (
     KlassifikationsError,
     OllamaApiError,
     OllamaConnectionError,
 )
-from lightroom_ollama_keywords.models import (
+from photo_keywords.models import (
     FotoKategorie,
     KlassifikationsConfig,
     KlassifikationsErgebnis,
     StandortDaten,
     ValidierungsConfig,
 )
-from lightroom_ollama_keywords.ollama_client import OllamaClient
+from photo_keywords.ollama_client import OllamaClient
 
 logger = logging.getLogger(__name__)
 

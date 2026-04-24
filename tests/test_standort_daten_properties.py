@@ -6,7 +6,7 @@ import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from lightroom_ollama_keywords.models import StandortDaten
+from photo_keywords.models import StandortDaten
 
 
 # ---------------------------------------------------------------------------

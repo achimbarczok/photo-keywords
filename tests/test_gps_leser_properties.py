@@ -9,7 +9,7 @@ from exifread.utils import Ratio
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from lightroom_ollama_keywords.gps_leser import GpsLeser
+from photo_keywords.gps_leser import GpsLeser
 
 
 # ---------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-"""CLI-Einstiegspunkt für den Lightroom Ollama Keyword Generator."""
+"""CLI-Einstiegspunkt für den Photo Keywords Generator."""
 
 from __future__ import annotations
 
@@ -6,44 +6,83 @@ import argparse
 import logging
 import sys
 
-from lightroom_ollama_keywords.batch_processor import BatchProcessor
-from lightroom_ollama_keywords.benchmark_runner import BenchmarkRunner
-from lightroom_ollama_keywords.config_loader import ConfigLoader
-from lightroom_ollama_keywords.errors import KeywordGeneratorError
-from lightroom_ollama_keywords.gps_leser import GpsLeser
-from lightroom_ollama_keywords.katalog_leser import KatalogLeser
-from lightroom_ollama_keywords.klassifikations_router import KlassifikationsRouter
-from lightroom_ollama_keywords.ollama_client import OllamaClient
-from lightroom_ollama_keywords.standort_resolver import StandortResolver
-from lightroom_ollama_keywords.stichwort_schreiber import StichwortSchreiber
-from lightroom_ollama_keywords.verarbeitungs_tracker import VerarbeitungsTracker
+from photo_keywords.batch_processor import BatchProcessor
+from photo_keywords.benchmark_runner import BenchmarkRunner
+from photo_keywords.config_loader import ConfigLoader
+from photo_keywords.errors import KeywordGeneratorError
+from photo_keywords.gps_leser import GpsLeser
+from photo_keywords.katalog_leser import KatalogLeser
+from photo_keywords.klassifikations_router import KlassifikationsRouter
+from photo_keywords.ollama_client import OllamaClient
+from photo_keywords.standort_resolver import StandortResolver
+from photo_keywords.stichwort_schreiber import StichwortSchreiber
+from photo_keywords.verarbeitungs_tracker import VerarbeitungsTracker
 
 logger = logging.getLogger(__name__)
 
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    """Parst die CLI-Argumente."""
+    """Parst die CLI-Argumente mit Subcommands."""
     parser = argparse.ArgumentParser(
-        description="Lightroom Ollama Keyword Generator — "
+        description="Photo Keywords Generator — "
         "Automatische Stichwort-Vergabe für Lightroom-Fotos über Ollama.",
     )
-    parser.add_argument(
+
+    subparsers = parser.add_subparsers(dest="command")
+
+    # --- keywords subcommand ---
+    kw_parser = subparsers.add_parser(
+        "keywords",
+        help="Stichwörter für Fotos generieren.",
+    )
+    kw_parser.add_argument(
         "--config",
         required=True,
         help="Pfad zur YAML-Konfigurationsdatei.",
     )
-    parser.add_argument(
+    kw_parser.add_argument(
         "--benchmark",
         default=None,
         help="Verzeichnis mit Testbildern für den Benchmark-Modus.",
     )
-    parser.add_argument(
+    kw_parser.add_argument(
         "--retry-errors",
         action="store_true",
         default=False,
         help="Zuvor fehlgeschlagene Fotos erneut verarbeiten.",
     )
-    return parser.parse_args(argv)
+
+    # --- gps-report subcommand ---
+    gps_parser = subparsers.add_parser(
+        "gps-report",
+        help="GPS-Bericht für Fotos im Katalog erstellen.",
+    )
+    gps_parser.add_argument(
+        "--config",
+        required=True,
+        help="Pfad zur YAML-Konfigurationsdatei.",
+    )
+    gps_parser.add_argument(
+        "--day",
+        default=None,
+        help="Nur Fotos eines bestimmten Tages anzeigen (Format: YYYY-MM-DD).",
+    )
+    gps_parser.add_argument(
+        "--month",
+        default=None,
+        help="Nur Fotos eines bestimmten Monats anzeigen (Format: YYYY-MM).",
+    )
+
+    # Default to 'keywords' if no subcommand given — backward compatibility
+    effective_argv = argv if argv is not None else sys.argv[1:]
+    if effective_argv and effective_argv[0] not in ("keywords", "gps-report"):
+        effective_argv = ["keywords"] + list(effective_argv)
+    elif not effective_argv:
+        effective_argv = ["keywords"] + list(effective_argv)
+
+    args = parser.parse_args(effective_argv)
+
+    return args
 
 
 def _setup_logging(log_file_path: str) -> None:
@@ -76,7 +115,7 @@ def _run_normal(config_path: str, retry_errors: bool = False) -> None:
     _setup_logging(config.log_file_path)
     print(f"Logdatei: {config.log_file_path}")
 
-    logger.info("=== Lightroom Ollama Keyword Generator gestartet ===")
+    logger.info("=== Photo Keywords Generator gestartet ===")
     logger.info("Konfiguration geladen: %s", config_path)
 
     katalog: KatalogLeser | None = None
@@ -193,12 +232,25 @@ def _run_benchmark(config_path: str, image_dir: str) -> None:
     logger.info("=== Benchmark beendet ===")
 
 
+def _run_gps_report(config_path: str, day: str | None = None, month: str | None = None) -> None:
+    """GPS-Bericht: Fotos ohne GPS-Daten auflisten."""
+    from photo_keywords.gps_report import GpsReport
+
+    loader = ConfigLoader()
+    config = loader.load(config_path)
+
+    report = GpsReport(config)
+    report.bericht_erstellen(tag=day, monat=month)
+
+
 def main(argv: list[str] | None = None) -> None:
     """Haupteinstiegspunkt."""
     args = _parse_args(argv)
 
     try:
-        if args.benchmark:
+        if args.command == "gps-report":
+            _run_gps_report(args.config, day=args.day, month=args.month)
+        elif args.benchmark:
             _run_benchmark(args.config, args.benchmark)
         else:
             _run_normal(args.config, retry_errors=args.retry_errors)

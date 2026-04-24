@@ -12,9 +12,9 @@ import pytest
 from hypothesis import given, settings, assume
 from hypothesis import strategies as st
 
-from lightroom_ollama_keywords.benchmark_runner import BenchmarkRunner
-from lightroom_ollama_keywords.errors import BenchmarkError
-from lightroom_ollama_keywords.models import (
+from photo_keywords.benchmark_runner import BenchmarkRunner
+from photo_keywords.errors import BenchmarkError
+from photo_keywords.models import (
     BenchmarkErgebnis,
     BenchmarkZusammenfassung,
     Config,
@@ -193,7 +193,7 @@ class TestPropertyBenchmarkEinheitlicherPrompt:
             _create_test_images(img_dir, ["test.jpg"])
 
             with patch(
-                "lightroom_ollama_keywords.benchmark_runner.OllamaClient",
+                "photo_keywords.benchmark_runner.OllamaClient",
                 MockOllamaClient,
             ):
                 runner.benchmark_ausfuehren(img_dir, csv_path)
@@ -708,7 +708,7 @@ class TestBenchmarkRunnerFehlerEinzelnesModell:
             _create_test_images(img_dir, ["img1.jpg"])
 
             with patch(
-                "lightroom_ollama_keywords.benchmark_runner.OllamaClient",
+                "photo_keywords.benchmark_runner.OllamaClient",
                 MockClient,
             ):
                 result = runner.benchmark_ausfuehren(img_dir, csv_path)
@@ -751,7 +751,7 @@ class TestBenchmarkRunnerZusammenfassungAusgabe:
             _create_test_images(img_dir, ["img1.jpg", "img2.jpg"])
 
             with patch(
-                "lightroom_ollama_keywords.benchmark_runner.OllamaClient",
+                "photo_keywords.benchmark_runner.OllamaClient",
                 MockClient,
             ):
                 runner.benchmark_ausfuehren(img_dir, csv_path)

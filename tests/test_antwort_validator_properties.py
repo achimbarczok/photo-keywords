@@ -5,8 +5,8 @@ from __future__ import annotations
 from hypothesis import given, settings, assume
 from hypothesis import strategies as st
 
-from lightroom_ollama_keywords.antwort_validator import AntwortValidator
-from lightroom_ollama_keywords.models import ValidierungsConfig
+from photo_keywords.antwort_validator import AntwortValidator
+from photo_keywords.models import ValidierungsConfig
 
 
 # ---------------------------------------------------------------------------

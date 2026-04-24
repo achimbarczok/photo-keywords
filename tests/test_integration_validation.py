@@ -16,16 +16,16 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from lightroom_ollama_keywords.batch_processor import BatchProcessor
-from lightroom_ollama_keywords.klassifikations_router import KlassifikationsRouter
-from lightroom_ollama_keywords.models import (
+from photo_keywords.batch_processor import BatchProcessor
+from photo_keywords.klassifikations_router import KlassifikationsRouter
+from photo_keywords.models import (
     FotoEintrag,
     FotoKategorie,
     KategorieConfig,
     KlassifikationsConfig,
     ValidierungsConfig,
 )
-from lightroom_ollama_keywords.ollama_client import OllamaClient
+from photo_keywords.ollama_client import OllamaClient
 
 
 # ---------------------------------------------------------------------------

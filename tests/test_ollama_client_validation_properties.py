@@ -8,8 +8,8 @@ from unittest.mock import MagicMock, patch
 from hypothesis import given, settings, assume
 from hypothesis import strategies as st
 
-from lightroom_ollama_keywords.models import ValidierungsConfig
-from lightroom_ollama_keywords.ollama_client import OllamaClient
+from photo_keywords.models import ValidierungsConfig
+from photo_keywords.ollama_client import OllamaClient
 
 
 # ---------------------------------------------------------------------------
@@ -66,7 +66,7 @@ class TestRetryCountBounded:
             return mock_response
 
         with patch(
-            "lightroom_ollama_keywords.ollama_client.requests.post",
+            "photo_keywords.ollama_client.requests.post",
             side_effect=counting_post,
         ):
             with patch.object(client, "_bild_zu_base64", return_value="ZmFrZQ=="):

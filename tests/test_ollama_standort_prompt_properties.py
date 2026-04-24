@@ -8,8 +8,8 @@ from __future__ import annotations
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from lightroom_ollama_keywords.models import StandortDaten
-from lightroom_ollama_keywords.ollama_client import OllamaClient
+from photo_keywords.models import StandortDaten
+from photo_keywords.ollama_client import OllamaClient
 
 
 # ---------------------------------------------------------------------------

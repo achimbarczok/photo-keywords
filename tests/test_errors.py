@@ -2,7 +2,7 @@
 
 import pytest
 
-from lightroom_ollama_keywords.errors import (
+from photo_keywords.errors import (
     BenchmarkError,
     ConfigError,
     ImageReadError,

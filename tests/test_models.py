@@ -2,7 +2,7 @@
 
 import dataclasses
 
-from lightroom_ollama_keywords.models import (
+from photo_keywords.models import (
     BatchErgebnis,
     BenchmarkErgebnis,
     BenchmarkZusammenfassung,

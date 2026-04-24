@@ -8,8 +8,8 @@ import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from lightroom_ollama_keywords.errors import MetadataWriteError
-from lightroom_ollama_keywords.stichwort_schreiber import StichwortSchreiber
+from photo_keywords.errors import MetadataWriteError
+from photo_keywords.stichwort_schreiber import StichwortSchreiber
 
 
 # ------------------------------------------------------------------
@@ -119,7 +119,7 @@ class TestMetadataWriteError:
     Anforderungen: 3.4
     """
 
-    @patch("lightroom_ollama_keywords.stichwort_schreiber.subprocess.run")
+    @patch("photo_keywords.stichwort_schreiber.subprocess.run")
     def test_schreibfehler_enthält_dateipfad(self, mock_run: MagicMock) -> None:
         """MetadataWriteError enthält den Dateipfad bei Schreibfehler."""
         mock_run.side_effect = RuntimeError("disk full")
@@ -130,7 +130,7 @@ class TestMetadataWriteError:
         with pytest.raises(MetadataWriteError, match=r"test_bild\.jpg"):
             schreiber.stichwörter_schreiben(test_path, ["Landschaft", "Natur"])
 
-    @patch("lightroom_ollama_keywords.stichwort_schreiber.subprocess.run")
+    @patch("photo_keywords.stichwort_schreiber.subprocess.run")
     def test_schreibfehler_ist_metadata_write_error(
         self, mock_run: MagicMock
     ) -> None:

@@ -15,10 +15,10 @@ from unittest.mock import MagicMock, call, patch
 
 import pytest
 
-from lightroom_ollama_keywords.batch_processor import BatchProcessor
-from lightroom_ollama_keywords.gps_leser import GpsLeser
-from lightroom_ollama_keywords.models import FotoEintrag, StandortDaten
-from lightroom_ollama_keywords.standort_resolver import StandortResolver
+from photo_keywords.batch_processor import BatchProcessor
+from photo_keywords.gps_leser import GpsLeser
+from photo_keywords.models import FotoEintrag, StandortDaten
+from photo_keywords.standort_resolver import StandortResolver
 
 
 # ---------------------------------------------------------------------------

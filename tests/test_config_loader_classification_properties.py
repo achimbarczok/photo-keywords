@@ -7,9 +7,9 @@ import yaml
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from lightroom_ollama_keywords.config_loader import ConfigLoader
-from lightroom_ollama_keywords.errors import ConfigError
-from lightroom_ollama_keywords.models import (
+from photo_keywords.config_loader import ConfigLoader
+from photo_keywords.errors import ConfigError
+from photo_keywords.models import (
     FotoKategorie,
     KategorieConfig,
     KlassifikationsConfig,

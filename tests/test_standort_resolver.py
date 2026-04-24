@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from lightroom_ollama_keywords.standort_resolver import StandortResolver
+from photo_keywords.standort_resolver import StandortResolver
 
 
 class TestStandortAufloesen:

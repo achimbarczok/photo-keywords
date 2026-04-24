@@ -5,11 +5,11 @@ from __future__ import annotations
 from hypothesis import given, settings, assume
 from hypothesis import strategies as st
 
-from lightroom_ollama_keywords.klassifikations_router import (
+from photo_keywords.klassifikations_router import (
     KlassifikationsRouter,
     _KATEGORIE_LOOKUP,
 )
-from lightroom_ollama_keywords.models import (
+from photo_keywords.models import (
     FotoKategorie,
     KategorieConfig,
     KlassifikationsConfig,

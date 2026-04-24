@@ -7,13 +7,13 @@ import logging
 
 import requests
 
-from lightroom_ollama_keywords.antwort_validator import AntwortValidator
-from lightroom_ollama_keywords.errors import (
+from photo_keywords.antwort_validator import AntwortValidator
+from photo_keywords.errors import (
     ImageReadError,
     OllamaApiError,
     OllamaConnectionError,
 )
-from lightroom_ollama_keywords.models import StandortDaten, ValidierungsConfig
+from photo_keywords.models import StandortDaten, ValidierungsConfig
 
 logger = logging.getLogger(__name__)
 

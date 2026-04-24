@@ -7,8 +7,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from lightroom_ollama_keywords.models import ValidierungsConfig
-from lightroom_ollama_keywords.ollama_client import OllamaClient
+from photo_keywords.models import ValidierungsConfig
+from photo_keywords.ollama_client import OllamaClient
 
 
 def _make_mock_response(response_text: str) -> MagicMock:
@@ -38,7 +38,7 @@ class TestValidatorCalledInAnalyseBild:
         valid_response = _make_mock_response("Natur, Wald, Baum")
 
         with patch(
-            "lightroom_ollama_keywords.ollama_client.requests.post",
+            "photo_keywords.ollama_client.requests.post",
             return_value=valid_response,
         ):
             with patch.object(client, "_bild_zu_base64", return_value="ZmFrZQ=="):
@@ -71,7 +71,7 @@ class TestRetryUsesRetryPrompt:
             return valid_resp
 
         with patch(
-            "lightroom_ollama_keywords.ollama_client.requests.post",
+            "photo_keywords.ollama_client.requests.post",
             side_effect=capture_post,
         ):
             with patch.object(client, "_bild_zu_base64", return_value="ZmFrZQ=="):
@@ -104,7 +104,7 @@ class TestLastResponseReturnedWhenRetriesExhausted:
             return resp
 
         with patch(
-            "lightroom_ollama_keywords.ollama_client.requests.post",
+            "photo_keywords.ollama_client.requests.post",
             side_effect=sequential_post,
         ):
             with patch.object(client, "_bild_zu_base64", return_value="ZmFrZQ=="):
@@ -136,7 +136,7 @@ class TestCustomRetryPrompt:
             return valid_resp
 
         with patch(
-            "lightroom_ollama_keywords.ollama_client.requests.post",
+            "photo_keywords.ollama_client.requests.post",
             side_effect=capture_post,
         ):
             with patch.object(client, "_bild_zu_base64", return_value="ZmFrZQ=="):
@@ -166,7 +166,7 @@ class TestRetryLogging:
             return resp
 
         with patch(
-            "lightroom_ollama_keywords.ollama_client.requests.post",
+            "photo_keywords.ollama_client.requests.post",
             side_effect=sequential_post,
         ):
             with patch.object(client, "_bild_zu_base64", return_value="ZmFrZQ=="):
@@ -198,7 +198,7 @@ class TestWarningOnExhaustedRetries:
         )
 
         with patch(
-            "lightroom_ollama_keywords.ollama_client.requests.post",
+            "photo_keywords.ollama_client.requests.post",
             return_value=invalid_resp,
         ):
             with patch.object(client, "_bild_zu_base64", return_value="ZmFrZQ=="):
@@ -237,7 +237,7 @@ class TestSuccessLogOnRetry:
             return resp
 
         with patch(
-            "lightroom_ollama_keywords.ollama_client.requests.post",
+            "photo_keywords.ollama_client.requests.post",
             side_effect=sequential_post,
         ):
             with patch.object(client, "_bild_zu_base64", return_value="ZmFrZQ=="):

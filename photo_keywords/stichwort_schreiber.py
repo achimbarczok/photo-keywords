@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 import subprocess
 
-from lightroom_ollama_keywords.errors import MetadataWriteError
+from photo_keywords.errors import MetadataWriteError
 
 logger = logging.getLogger(__name__)
 

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 
-from lightroom_ollama_keywords.models import StandortDaten
+from photo_keywords.models import StandortDaten
 
 logger = logging.getLogger(__name__)
 

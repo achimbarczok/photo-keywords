@@ -7,8 +7,8 @@ from __future__ import annotations
 
 import yaml
 
-from lightroom_ollama_keywords.config_loader import ConfigLoader
-from lightroom_ollama_keywords.models import ValidierungsConfig
+from photo_keywords.config_loader import ConfigLoader
+from photo_keywords.models import ValidierungsConfig
 
 
 class TestConfigLoaderValidationParsing:

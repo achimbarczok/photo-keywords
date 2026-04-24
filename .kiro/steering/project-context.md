@@ -2,7 +2,7 @@
 inclusion: always
 ---
 
-# Lightroom Ollama Keyword Generator — Projektkontext
+# Photo Keywords Generator — Projektkontext
 
 ## Überblick
 Automatische Stichwort-Vergabe für Adobe Lightroom Classic über lokal laufende KI-Modelle (Ollama).
@@ -27,6 +27,7 @@ Alle Verarbeitung läuft offline — kein Cloud-Upload, keine externen APIs.
 - `standort_resolver.py` — Offline-Reverse-Geocoding (reverse_geocoder)
 - `benchmark_runner.py` — Modellvergleich mit CSV-Ausgabe
 - `verarbeitungs_tracker.py` — Tracking-DB (SQLite)
+- `gps_report.py` — GPS-Bericht: Fotos ohne GPS-Daten auflisten
 
 ## Konventionen
 - Deutsche Bezeichner im Code (Klassen, Methoden, Variablen)

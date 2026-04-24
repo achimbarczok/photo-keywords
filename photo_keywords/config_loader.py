@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import yaml
 
-from lightroom_ollama_keywords.errors import ConfigError
-from lightroom_ollama_keywords.models import (
+from photo_keywords.errors import ConfigError
+from photo_keywords.models import (
     Config,
     FotoKategorie,
     KategorieConfig,

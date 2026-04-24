@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from lightroom_ollama_keywords.models import ValidierungsConfig, ValidierungsErgebnis
+from photo_keywords.models import ValidierungsConfig, ValidierungsErgebnis
 
 
 class AntwortValidator:

@@ -22,12 +22,12 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from lightroom_ollama_keywords.batch_processor import BatchProcessor
-from lightroom_ollama_keywords.benchmark_runner import BenchmarkRunner
-from lightroom_ollama_keywords.katalog_leser import KatalogLeser
-from lightroom_ollama_keywords.models import Config, FotoEintrag
-from lightroom_ollama_keywords.ollama_client import OllamaClient
-from lightroom_ollama_keywords.verarbeitungs_tracker import VerarbeitungsTracker
+from photo_keywords.batch_processor import BatchProcessor
+from photo_keywords.benchmark_runner import BenchmarkRunner
+from photo_keywords.katalog_leser import KatalogLeser
+from photo_keywords.models import Config, FotoEintrag
+from photo_keywords.ollama_client import OllamaClient
+from photo_keywords.verarbeitungs_tracker import VerarbeitungsTracker
 
 
 # ---------------------------------------------------------------------------

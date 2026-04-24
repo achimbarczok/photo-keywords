@@ -5,9 +5,9 @@ import sqlite3
 
 import pytest
 
-from lightroom_ollama_keywords.errors import TrackerError
-from lightroom_ollama_keywords.models import FotoEintrag
-from lightroom_ollama_keywords.verarbeitungs_tracker import VerarbeitungsTracker
+from photo_keywords.errors import TrackerError
+from photo_keywords.models import FotoEintrag
+from photo_keywords.verarbeitungs_tracker import VerarbeitungsTracker
 
 
 class TestVerarbeitungsTrackerInit:

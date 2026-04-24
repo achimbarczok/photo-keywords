@@ -5,8 +5,8 @@ from __future__ import annotations
 import os
 import sqlite3
 
-from lightroom_ollama_keywords.errors import KatalogError
-from lightroom_ollama_keywords.models import FotoEintrag
+from photo_keywords.errors import KatalogError
+from photo_keywords.models import FotoEintrag
 
 _FOTO_QUERY = """\
 SELECT

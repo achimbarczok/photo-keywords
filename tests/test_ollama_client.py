@@ -3,7 +3,7 @@
 from hypothesis import given, settings, assume
 from hypothesis import strategies as st
 
-from lightroom_ollama_keywords.ollama_client import OllamaClient
+from photo_keywords.ollama_client import OllamaClient
 
 
 # ---------------------------------------------------------------------------
@@ -85,7 +85,7 @@ import pytest
 import requests
 from unittest.mock import patch, MagicMock
 
-from lightroom_ollama_keywords.errors import (
+from photo_keywords.errors import (
     ImageReadError,
     OllamaApiError,
     OllamaConnectionError,
@@ -106,7 +106,7 @@ class TestOllamaConnectionError:
             prompt_template="describe",
         )
 
-        with patch("lightroom_ollama_keywords.ollama_client.requests.post") as mock_post:
+        with patch("photo_keywords.ollama_client.requests.post") as mock_post:
             mock_post.side_effect = requests.ConnectionError("Connection refused")
 
             with patch.object(client, "_bild_zu_base64", return_value="ZmFrZQ=="):
@@ -131,7 +131,7 @@ class TestOllamaApiError:
         mock_response.status_code = 500
         mock_response.text = "Internal Server Error"
 
-        with patch("lightroom_ollama_keywords.ollama_client.requests.post", return_value=mock_response):
+        with patch("photo_keywords.ollama_client.requests.post", return_value=mock_response):
             with patch.object(client, "_bild_zu_base64", return_value="ZmFrZQ=="):
                 with pytest.raises(OllamaApiError):
                     client.analyse_bild("dummy.jpg")

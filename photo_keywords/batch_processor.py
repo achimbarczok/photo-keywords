@@ -8,15 +8,15 @@ import time
 from collections import Counter
 from typing import TYPE_CHECKING
 
-from lightroom_ollama_keywords.models import BatchErgebnis, FotoEintrag, StandortDaten
+from photo_keywords.models import BatchErgebnis, FotoEintrag, StandortDaten
 
 if TYPE_CHECKING:
-    from lightroom_ollama_keywords.gps_leser import GpsLeser
-    from lightroom_ollama_keywords.klassifikations_router import KlassifikationsRouter
-    from lightroom_ollama_keywords.ollama_client import OllamaClient
-    from lightroom_ollama_keywords.standort_resolver import StandortResolver
-    from lightroom_ollama_keywords.stichwort_schreiber import StichwortSchreiber
-    from lightroom_ollama_keywords.verarbeitungs_tracker import VerarbeitungsTracker
+    from photo_keywords.gps_leser import GpsLeser
+    from photo_keywords.klassifikations_router import KlassifikationsRouter
+    from photo_keywords.ollama_client import OllamaClient
+    from photo_keywords.standort_resolver import StandortResolver
+    from photo_keywords.stichwort_schreiber import StichwortSchreiber
+    from photo_keywords.verarbeitungs_tracker import VerarbeitungsTracker
 
 logger = logging.getLogger(__name__)
 

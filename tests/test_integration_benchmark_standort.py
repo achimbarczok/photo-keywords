@@ -5,9 +5,9 @@ BenchmarkRunner erzeugt CSV mit Standort-Spalte. GPS wird aus EXIF gelesen
 Standort-Kontext wird an analyse_bild() übergeben.
 
 Mocks auf Modul-Ebene:
-- lightroom_ollama_keywords.benchmark_runner.GpsLeser
-- lightroom_ollama_keywords.benchmark_runner.StandortResolver
-- lightroom_ollama_keywords.benchmark_runner.OllamaClient
+- photo_keywords.benchmark_runner.GpsLeser
+- photo_keywords.benchmark_runner.StandortResolver
+- photo_keywords.benchmark_runner.OllamaClient
 
 Requirements: 6.1, 6.3, 6.5
 """
@@ -22,8 +22,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from lightroom_ollama_keywords.benchmark_runner import BenchmarkRunner
-from lightroom_ollama_keywords.models import Config, StandortDaten
+from photo_keywords.benchmark_runner import BenchmarkRunner
+from photo_keywords.models import Config, StandortDaten
 
 
 # ---------------------------------------------------------------------------
@@ -144,9 +144,9 @@ class TestBenchmarkMitStandortCsv:
             csv_path = os.path.join(csv_dir, "benchmark.csv")
             _create_test_images(img_dir, ["berlin.jpg", "no_gps.jpg"])
 
-            with patch("lightroom_ollama_keywords.benchmark_runner.GpsLeser", MockGpsLeser), \
-                 patch("lightroom_ollama_keywords.benchmark_runner.StandortResolver", MockStandortResolver), \
-                 patch("lightroom_ollama_keywords.benchmark_runner.OllamaClient", track_client):
+            with patch("photo_keywords.benchmark_runner.GpsLeser", MockGpsLeser), \
+                 patch("photo_keywords.benchmark_runner.StandortResolver", MockStandortResolver), \
+                 patch("photo_keywords.benchmark_runner.OllamaClient", track_client):
                 runner = BenchmarkRunner(config)
                 runner.benchmark_ausfuehren(img_dir, csv_path)
 
@@ -215,9 +215,9 @@ class TestBenchmarkMitStandortCsv:
             csv_path = os.path.join(csv_dir, "bench.csv")
             _create_test_images(img_dir, ["muenchen.jpg"])
 
-            with patch("lightroom_ollama_keywords.benchmark_runner.GpsLeser", mock_gps), \
-                 patch("lightroom_ollama_keywords.benchmark_runner.StandortResolver", mock_resolver), \
-                 patch("lightroom_ollama_keywords.benchmark_runner.OllamaClient", MockClient):
+            with patch("photo_keywords.benchmark_runner.GpsLeser", mock_gps), \
+                 patch("photo_keywords.benchmark_runner.StandortResolver", mock_resolver), \
+                 patch("photo_keywords.benchmark_runner.OllamaClient", MockClient):
                 runner = BenchmarkRunner(config)
                 runner.benchmark_ausfuehren(img_dir, csv_path)
 
@@ -255,9 +255,9 @@ class TestBenchmarkMitStandortCsv:
             csv_path = os.path.join(csv_dir, "bench.csv")
             _create_test_images(img_dir, ["foto.jpg"])
 
-            with patch("lightroom_ollama_keywords.benchmark_runner.GpsLeser", mock_gps), \
-                 patch("lightroom_ollama_keywords.benchmark_runner.StandortResolver", mock_resolver), \
-                 patch("lightroom_ollama_keywords.benchmark_runner.OllamaClient", MockClient):
+            with patch("photo_keywords.benchmark_runner.GpsLeser", mock_gps), \
+                 patch("photo_keywords.benchmark_runner.StandortResolver", mock_resolver), \
+                 patch("photo_keywords.benchmark_runner.OllamaClient", MockClient):
                 runner = BenchmarkRunner(config)
                 runner.benchmark_ausfuehren(img_dir, csv_path)
 
