@@ -65,6 +65,7 @@ class BatchProcessor:
         fehler = 0
         fehler_details: list[str] = []
         kategorie_zaehler: Counter[str] = Counter()
+        mit_gps = 0
 
         from datetime import datetime, timedelta
 
@@ -96,6 +97,7 @@ class BatchProcessor:
 
                 if standort_daten is not None:
                     print(f"  Standort: {standort_daten.stadt}, {standort_daten.land}")
+                    mit_gps += 1
                 elif self._gps_leser is not None:
                     print(f"  Standort: kein GPS")
 
@@ -149,6 +151,9 @@ class BatchProcessor:
             print(f"Dauer: {dauer:.1f}s")
         print(f"Verarbeitet: {verarbeitet}")
         print(f"Fehler: {fehler}")
+
+        if self._gps_leser is not None:
+            print(f"Mit GPS-Standort: {mit_gps}/{verarbeitet}")
 
         if kategorie_zaehler:
             print("Fotos pro Kategorie:")
