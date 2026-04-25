@@ -42,14 +42,21 @@ class GpsReport:
             katalog.close()
 
         gps_leser = GpsLeser()
+        gesamt_fotos = len(fotos)
 
         # Fotos nach Datum gruppieren und GPS-Status prüfen
         tage_mit_gps: dict[str, list[str]] = defaultdict(list)
         tage_ohne_gps: dict[str, list[str]] = defaultdict(list)
 
-        for foto in fotos:
+        print(f"Prüfe {gesamt_fotos} Fotos auf GPS-Daten...")
+        for i, foto in enumerate(fotos, start=1):
+            if i % 500 == 0 or i == gesamt_fotos:
+                print(f"  {i}/{gesamt_fotos}...", end="\r")
             datum = self._datum_aus_dateiname(foto.file_path)
-            hat_gps = gps_leser.gps_aus_exif(foto.file_path) is not None
+            try:
+                hat_gps = gps_leser.gps_aus_exif(foto.file_path) is not None
+            except Exception:
+                hat_gps = False
 
             if hat_gps:
                 tage_mit_gps[datum].append(foto.file_path)
