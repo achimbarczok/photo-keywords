@@ -1,5 +1,7 @@
 pyyaml
 requests
 pyexiftool
+Pillow
+exifread
 pytest
 hypothesis

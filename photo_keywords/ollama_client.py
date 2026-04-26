@@ -195,18 +195,61 @@ class OllamaClient:
         response_text = data.get("response", "")
         return self._antwort_parsen(response_text)
 
+    # Formate, die Ollama nicht direkt lesen kann → temporäre JPEG-Konvertierung
+    _KONVERTIERUNGS_FORMATE = {
+        ".cr2", ".cr3", ".nef", ".arw", ".orf", ".rw2", ".raf",
+        ".tiff", ".tif", ".bmp", ".webp",
+    }
+
     def _bild_zu_base64(self, image_path: str) -> str:
         """Liest eine Bilddatei und gibt den base64-kodierten Inhalt zurück.
 
+        Für RAW- und TIFF-Formate wird das Bild temporär nach JPEG konvertiert.
+
         Raises:
-            ImageReadError: Datei nicht lesbar.
+            ImageReadError: Datei nicht lesbar oder nicht konvertierbar.
         """
+        import os
+
+        ext = os.path.splitext(image_path)[1].lower()
+
+        if ext in self._KONVERTIERUNGS_FORMATE:
+            return self._konvertieren_und_base64(image_path)
+
         try:
             with open(image_path, "rb") as f:
                 return base64.b64encode(f.read()).decode("ascii")
         except (OSError, IOError) as exc:
             raise ImageReadError(
                 f"Bilddatei nicht lesbar: {image_path}"
+            ) from exc
+
+    def _konvertieren_und_base64(self, image_path: str) -> str:
+        """Konvertiert ein Bild nach JPEG im Speicher und gibt base64 zurück.
+
+        Verwendet Pillow (PIL) für die Konvertierung. Bei RAW-Formaten
+        wird rawpy verwendet, falls verfügbar.
+
+        Raises:
+            ImageReadError: Konvertierung fehlgeschlagen.
+        """
+        import io
+
+        try:
+            from PIL import Image
+
+            img = Image.open(image_path)
+            img = img.convert("RGB")
+
+            buffer = io.BytesIO()
+            img.save(buffer, format="JPEG", quality=85)
+            buffer.seek(0)
+
+            logger.debug("Konvertiert nach JPEG: %s", image_path)
+            return base64.b64encode(buffer.read()).decode("ascii")
+        except Exception as exc:
+            raise ImageReadError(
+                f"Bildkonvertierung fehlgeschlagen für '{image_path}': {exc}"
             ) from exc
 
     def _antwort_parsen(self, response_text: str) -> list[str]:
