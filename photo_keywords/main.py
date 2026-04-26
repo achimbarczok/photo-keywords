@@ -73,9 +73,26 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="Nur Fotos eines bestimmten Monats anzeigen (Format: YYYY-MM).",
     )
 
+    # --- errors subcommand ---
+    err_parser = subparsers.add_parser(
+        "errors",
+        help="Gespeicherte Fehler aus der Tracking-DB anzeigen.",
+    )
+    err_parser.add_argument(
+        "--config",
+        required=True,
+        help="Pfad zur YAML-Konfigurationsdatei.",
+    )
+    err_parser.add_argument(
+        "--by-type",
+        action="store_true",
+        default=False,
+        help="Fehler nach Dateityp gruppiert anzeigen.",
+    )
+
     # Default to 'keywords' if no subcommand given — backward compatibility
     effective_argv = argv if argv is not None else sys.argv[1:]
-    if effective_argv and effective_argv[0] not in ("keywords", "gps-report"):
+    if effective_argv and effective_argv[0] not in ("keywords", "gps-report", "errors"):
         effective_argv = ["keywords"] + list(effective_argv)
     elif not effective_argv:
         effective_argv = ["keywords"] + list(effective_argv)
@@ -243,6 +260,52 @@ def _run_gps_report(config_path: str, day: str | None = None, month: str | None 
     report.bericht_erstellen(tag=day, monat=month)
 
 
+def _run_errors(config_path: str, by_type: bool = False) -> None:
+    """Zeigt gespeicherte Fehler aus der Tracking-DB an."""
+    import os
+    from collections import Counter
+
+    loader = ConfigLoader()
+    config = loader.load(config_path)
+
+    tracker = VerarbeitungsTracker(config.tracking_db_path)
+    try:
+        cursor = tracker._conn.execute(
+            "SELECT file_path, fehler_text, timestamp FROM fehler ORDER BY file_path"
+        )
+        fehler = cursor.fetchall()
+    finally:
+        tracker.close()
+
+    if not fehler:
+        print("Keine Fehler gespeichert.")
+        return
+
+    if by_type:
+        typ_zaehler: Counter[str] = Counter()
+        typ_beispiele: dict[str, list[str]] = {}
+        for file_path, fehler_text, _ in fehler:
+            ext = os.path.splitext(file_path)[1].lower() or "(ohne)"
+            typ_zaehler[ext] += 1
+            if ext not in typ_beispiele:
+                typ_beispiele[ext] = []
+            if len(typ_beispiele[ext]) < 3:
+                typ_beispiele[ext].append(f"{file_path}: {fehler_text}")
+
+        print(f"\n=== Fehler nach Dateityp ({len(fehler)} gesamt) ===\n")
+        for ext, anzahl in typ_zaehler.most_common():
+            print(f"{ext}: {anzahl} Fehler")
+            for beispiel in typ_beispiele[ext]:
+                print(f"  {beispiel}")
+            print()
+    else:
+        print(f"\n=== Gespeicherte Fehler ({len(fehler)} gesamt) ===\n")
+        for file_path, fehler_text, timestamp in fehler:
+            print(f"{file_path}")
+            print(f"  {fehler_text}")
+            print()
+
+
 def main(argv: list[str] | None = None) -> None:
     """Haupteinstiegspunkt."""
     args = _parse_args(argv)
@@ -250,6 +313,8 @@ def main(argv: list[str] | None = None) -> None:
     try:
         if args.command == "gps-report":
             _run_gps_report(args.config, day=args.day, month=args.month)
+        elif args.command == "errors":
+            _run_errors(args.config, by_type=args.by_type)
         elif args.benchmark:
             _run_benchmark(args.config, args.benchmark)
         else:
