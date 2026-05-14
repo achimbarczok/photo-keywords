@@ -12,7 +12,7 @@
 
 ## ✨ What it does
 
-Got thousands of photos in Lightroom without keywords? This tool analyzes your photos with a local vision model and writes descriptive keywords directly into the image files. Lightroom then reads them in — instant searchability.
+Got thousands of photos in Lightroom without keywords? This tool analyzes your photos with a local vision model and writes descriptive keywords directly into the image files. Lightroom then reads them in — instant searchability. The scripts are focused on German keywords but can easily be switched to English with the right prompts.
 
 **Example output for a photo taken in Chicago:**
 ```
@@ -115,6 +115,8 @@ python -m photo_keywords errors --config config.yaml --by-type
 ```
 
 ## ⚙️ Configuration
+
+The config in the repo is in German - this is only the translation but can be a good starting point for an English version.
 
 <details>
 <summary><strong>Full config with all options</strong></summary>
