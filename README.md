@@ -6,6 +6,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-230%2B-green.svg)]()
 
+**English** | 🌐 [Deutsch](README.de.md)
+
 ---
 
 ## ✨ What it does
